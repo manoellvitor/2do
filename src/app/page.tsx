@@ -28,13 +28,14 @@ export default async function Home() {
       <div className=" flex justify-center items-center mt-2">
         <form action="" className="flex gap-4">
           <input
-            type="text"
+            type="search"
             name="todo"
             id="todo"
-            placeholder="Enter your new todo here."
+            placeholder="start typing your todo"
             autoComplete="off"
             className="w-96 focus:outline-none rounded p-2 overflow-hidden bg-zinc-300 placeholder:text-zinc-700 uppercase text-zinc-900"
           />
+
           <div className="flex gap-1 text-zinc-100 bg-violet-700 hover:bg-violet-900 transition-colors duration-300 rounded overflow-hidden p-2 font-semibold cursor-pointer">
             <span>Create</span>
           </div>
