@@ -1,17 +1,17 @@
 import { Check, Trash2 } from "lucide-react";
 
-type Todo = {
+interface TodoItemProps {
   id: String;
   title: String;
   complete: Boolean;
-};
+}
 
-export default async function TodoItem(todo: Todo) {
+export default async function TodoItem({ id, title, complete }: TodoItemProps) {
   return (
     <li className="flex justify-between items-center border-b-2 border-b-zinc-700 pb-2">
       <div className="flex gap-2 text-zinc-100">
         <input type="checkbox" name="" id="" />
-        <p className="uppercase">{todo.title}</p>
+        <p className="uppercase">{title}</p>
       </div>
       <div className="text-zinc-100 flex gap-4">
         <div className="tooltip" data-tip="Delete">
