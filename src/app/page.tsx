@@ -100,7 +100,11 @@ export default async function Home() {
             <p>Actions</p>
           </div>
         ) : (
-          <></>
+          <div className="flex items-center justify-center ">
+            <p className="text-center uppercase text-zinc-500">
+              no todos yet, create your first todo!
+            </p>
+          </div>
         )}
 
         {/* Todos List */}
