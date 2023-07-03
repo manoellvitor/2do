@@ -18,7 +18,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={AnonymousPro.className}>{children}</body>
+      <body className={AnonymousPro.className} suppressHydrationWarning={true}>
+        {children}
+      </body>
     </html>
   );
 }
