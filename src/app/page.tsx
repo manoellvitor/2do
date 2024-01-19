@@ -132,7 +132,7 @@ export default async function Home() {
               <NotebookPen size={70} strokeWidth="1" />
             </div>
             <p className="text-md text-center font-semibold text-gray-500">
-              You don't have any tasks registered yet.
+              You don&apos;t have any tasks registered yet.
             </p>
             <p className="text-center text-gray-500">
               Create tasks and organize your to-do items
