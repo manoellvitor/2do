@@ -1,4 +1,5 @@
 import "./globals.css";
+
 import { Anonymous_Pro } from "next/font/google";
 
 const AnonymousPro = Anonymous_Pro({
@@ -8,7 +9,8 @@ const AnonymousPro = Anonymous_Pro({
 
 export const metadata = {
   title: "2do",
-  description: "Simple todo app using Next.js, Prisma and Tailwind.",
+  description:
+    "Simple todo app using Next.js, Prisma, Vercel`s Postgres and Tailwind.",
 };
 
 export default function RootLayout({

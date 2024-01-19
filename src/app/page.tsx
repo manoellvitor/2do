@@ -1,14 +1,26 @@
+import { Alert } from "../components/Alert";
+import { Lilita_One } from "next/font/google";
+import Link from "next/link";
+import { NotebookPen } from "lucide-react";
 import { TodoItem } from "@/components/TodoItem";
 import { prisma } from "@/db";
-import { Gasoek_One } from "next/font/google";
-import Link from "next/link";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
-const GasoekOne = Gasoek_One({ subsets: ["latin"], weight: "400" });
+const LilitaOne = Lilita_One({ subsets: ["latin"], weight: "400" });
+let flag = false;
 
-function getTodos() {
-  return prisma.todo.findMany();
+async function getTodos() {
+  return await prisma.todo.findMany();
+}
+
+async function getTodoByTitle(title: string) {
+  flag = true;
+  return await prisma.todo.findFirst({
+    where: {
+      title,
+    },
+  });
 }
 
 async function createTodo(data: FormData) {
@@ -20,6 +32,12 @@ async function createTodo(data: FormData) {
     throw new Error("Invalid Title");
   }
 
+  if (await getTodoByTitle(title)) {
+    revalidatePath("/");
+    redirect("/");
+    return;
+  }
+  flag = false;
   await prisma.todo.create({
     data: {
       title,
@@ -56,11 +74,11 @@ export default async function Home() {
   const todos = await getTodos();
   return (
     <div className="mx-auto flex h-screen flex-col gap-2">
-      <div className="flex w-full justify-center">
-        <div className="flex h-24 w-full items-center justify-center overflow-hidden border-b-2 border-zinc-700">
+      <div className="mt-20 flex w-full justify-center">
+        <div className="flex h-24 w-full items-center justify-center overflow-hidden">
           <Link
             href={"/"}
-            className={`${GasoekOne.className} text-8xl text-zinc-100`}
+            className={`${LilitaOne.className} text-9xl text-zinc-100`}
           >
             <span className="text-violet-800">2</span>do
           </Link>
@@ -68,7 +86,7 @@ export default async function Home() {
       </div>
 
       {/* New todo form */}
-      <div className=" mt-2 flex items-center justify-center">
+      <div className="mt-10 flex items-center justify-center">
         <form
           action={createTodo}
           className="flex flex-col items-center justify-center gap-4 sm:flex-row"
@@ -78,9 +96,9 @@ export default async function Home() {
             name="title"
             id="title"
             required
-            placeholder="start typing your todo"
+            placeholder="Add a new task"
             autoComplete="off"
-            className="w-80  overflow-hidden rounded bg-zinc-300 p-2 uppercase text-zinc-900 placeholder:text-zinc-700 focus:outline-none sm:w-96"
+            className="w-80  overflow-hidden rounded bg-gray-900 p-2 text-gray-400 placeholder:text-gray-500 focus:outline-none focus:outline-violet-900 sm:w-96"
           />
 
           <button
@@ -92,35 +110,37 @@ export default async function Home() {
         </form>
       </div>
 
-      {/* Header */}
       <div className="container mx-auto p-4">
         {todos.length > 0 ? (
-          <div className="mb-2 flex justify-between p-2 text-zinc-400">
-            <p>Tasks</p>
-            <p>Actions</p>
+          <div className="mx-auto mb-2 flex max-w-4xl justify-between p-2 text-gray-500">
+            <ul className="flex flex-1 flex-col gap-6">
+              {todos.map((todo) => {
+                return (
+                  <TodoItem
+                    key={todo.id}
+                    {...todo}
+                    handleCompleteTodo={handleCompleteTodo}
+                    handleDeleteTodo={handleDeleteTodo}
+                  />
+                );
+              })}
+            </ul>
           </div>
         ) : (
-          <div className="flex items-center justify-center ">
-            <p className="text-center uppercase text-zinc-500">
-              no todos yet, create your first todo!
+          <div className="mt-20 flex flex-col items-center justify-center">
+            <div className="p-4 text-gray-500">
+              <NotebookPen size={70} strokeWidth="1" />
+            </div>
+            <p className="text-md text-center font-semibold text-gray-500">
+              You don't have any tasks registered yet.
+            </p>
+            <p className="text-center text-gray-500">
+              Create tasks and organize your to-do items
             </p>
           </div>
         )}
-
-        {/* Todos List */}
-        <ul className="flex flex-col gap-6">
-          {todos.map((todo) => {
-            return (
-              <TodoItem
-                key={todo.id}
-                {...todo}
-                handleCompleteTodo={handleCompleteTodo}
-                handleDeleteTodo={handleDeleteTodo}
-              />
-            );
-          })}
-        </ul>
       </div>
+      {flag ? <Alert message={"Task Already Exist"} /> : ""}
     </div>
   );
 }
