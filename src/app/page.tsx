@@ -14,6 +14,14 @@ async function getTodos() {
   return await prisma.todo.findMany();
 }
 
+async function getCompletedTodos() {
+  return await prisma.todo.findMany({
+    where: {
+      complete: true,
+    },
+  });
+}
+
 async function getTodoByTitle(title: string) {
   flag = true;
   return await prisma.todo.findFirst({
@@ -72,6 +80,7 @@ async function handleDeleteTodo(id: string) {
 
 export default async function Home() {
   const todos = await getTodos();
+  const completedTodos = await getCompletedTodos();
   return (
     <div className="mx-auto flex h-screen flex-col gap-2">
       <div className="mt-20 flex w-full justify-center">
@@ -111,6 +120,20 @@ export default async function Home() {
       </div>
 
       <div className="container mx-auto p-4">
+        <div className="flex items-center max-w-4xl justify-between mx-auto text-violet-900 font-bold mt-10">
+          <div>
+            Created Tasks{" "}
+            <span className="text-gray-500 px-4 py-1 bg-gray-800 rounded-full">
+              {todos.length}
+            </span>
+          </div>
+          <div>
+            Done Tasks{" "}
+            <span className="text-gray-500 px-4 py-1 bg-gray-800 rounded-full">
+              {completedTodos.length} of {todos.length}
+            </span>
+          </div>
+        </div>
         {todos.length > 0 ? (
           <div className="mx-auto mb-2 flex max-w-4xl justify-between p-2 text-gray-500">
             <ul className="flex flex-1 flex-col gap-6">
